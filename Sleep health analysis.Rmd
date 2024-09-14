@@ -1,38 +1,25 @@
 ---
-title: "Google Capstone R file"
+title: "Sleep Health Analysis"
 output: html_document
 date: "2024-05-31"
 ---
 
 Ask 
 
-Sršen who is the stake holder asks you to analyze smart device usage data in order to gain insight into how consumers use non-Bellabeat smart devices. She then wants you to select one Bellabeat product to apply these insights to in your presentation. These questions will guide your analysis: 
 
-1. What are some trends in smart device usage? 
+1. What are some trends in sleep health? 
 
-The measurable activities of the group change over time increasing the good healthy habits and decreasing the negative unhealthy habits
+We can analysis the sleep health to discover patterns affects activity level.
 
-2. How could these trends apply to Bellabeat customers? 
 
-The devices measure similar attributes about the clients health giving us an insight on how our customers would use the data..\
-
-3. How could these trends help influence Bellabeat marketing strategy? 
-
-Our goal is share to are future clients the health benefits in investing money into our products. We should advertise the health is improved across the all measurement giving people numbers to order there actions for a day.
 
 You will produce a report with the following deliverers: 
 
 
 1. A clear summary of the business task.
-
-The goal is to understand how the women are using the app to track their health habits in order to maximize the usage of the app to generate more customers. The goal is to find trends on how the produce is being used by the consumer. We focus on the leaf device that tracks health information and summits to the smart device for look up. It's the frontline piece that does most of the data collection. 
  
 
 2.A description of all data sources used. 
-
-We have two months of data from mturk-fitbit. These are data sets of a competitor fit bit not Bellabeat, but the usage of the devices are likely to be similar enough to guide the services we want to analyze.  
-
-3. Documentation of any cleaning or manipulation of data. Will be presented below in the document in the format r making all changes reproducible for others. 
 
 4. A summary of your analysis 
 
@@ -45,28 +32,22 @@ Ask phase Questions.
 
 What is the problem you are trying to solve? 
 
-THe problem we are trying to find is how does the device effect peoples lives, so we can advertise the features to the prospective consumers using or advertising dollars effectively.
+Does having bad sleep decrease activities levels compared to the average person in the study.
+
 
 How can your insights drive business decisions?  
 
-The insights could lead to improvements in the areas that people actually use. As well, as helping existing clients develop a better understanding of how others successfully change their life.
-
+if we could improve the person sleep, we improve health by increasing activity level.
 
 Prepare phase questions.
 
 Where is your data stored? 
 
-CSV in 16 different files
+One Csv File
 
 How is the data organized?
 
-The data is divided into wide format on daily Activity where each row has lots of different types of informational columns
-
-Long format on the rest of the data CSVs to represent data in time series that is best used by long format.
-
-Are there issues with bias or credibility in this data? 
-
-The data set contains a lot of missing data set from the 2 month periods showing only 31 days total for some people even less for others. The data set bias is supect due it being very small containing only 38 members that size increases bias as well as some of the ommited parts of the data like gender and age which are very accurate for health data. 
+The data is divided into wide format on daily Activity where each row has observations about the measurable health statistics. 
 
 
 Does your data ROCCC? 
@@ -135,22 +116,16 @@ Key tasks
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
+library(magrittr)
 
 install.packages("skimr")
 library(skimr)
 ```
 
 ```{r}
-data <- read.csv('dailyActivity_merged.csv')
+data <- read.csv('Health_Sleep_Statistics.csv')
 
 
-data_second <- read.csv('dailyActivity_merged_second_month.csv')
-
-data_full <- rbind(data,data_second)
-
-view(data_full)
-
-data <- data_full
 ```
 
 This is the start of the key task to check the data for errors.
@@ -162,72 +137,11 @@ As you can observe the number of n_missing data is zero suggesting all the colum
 glimpse(data)
 
 ```
-All the columns have a constant name format therefore do not need to be cleaned. Every word is capitalized and there are no spaces between them removing unnecessary underscores. 
+All the columns have a constant name format therefore do not need to be cleaned. Every word is lowercase and there are no spaces between them removing unnecessary underscores. 
 
 Cleaning the data to confirm that all the columns contain numeric values this step proved to be unnecessary, but it was a fun implementation of code.
 
-```{r}
 
-numeric_rows <- !is.na(as.numeric(as.character(data$Id)))
-count_numeric <- sum(numeric_rows)
-print(count_numeric)
-
-numeric_rows <- !is.na(as.numeric(as.character(data$ActivityDate)))
-count_numeric <- sum(numeric_rows)
-print(count_numeric)
-
-numeric_rows <- !is.na(as.numeric(as.character(data$TotalSteps)))
-count_numeric <- sum(numeric_rows)
-print(count_numeric)
-
-numeric_rows <- !is.na(as.numeric(as.character(data$TotalDistance)))
-count_numeric <- sum(numeric_rows)
-print(count_numeric)
-
-numeric_rows <- !is.na(as.numeric(as.character(data$TrackerDistance)))
-count_numeric <- sum(numeric_rows)
-print(count_numeric)
-
-numeric_rows <- !is.na(as.numeric(as.character(data$LoggedActivitiesDistance)))
-count_numeric <- sum(numeric_rows)
-print(count_numeric)
-
-numeric_rows <- !is.na(as.numeric(as.character(data$VeryActiveDistance)))
-count_numeric <- sum(numeric_rows)
-print(count_numeric)
-
-numeric_rows <- !is.na(as.numeric(as.character(data$ModeratelyActiveDistance)))
-count_numeric <- sum(numeric_rows)
-print(count_numeric)
-
-numeric_rows <- !is.na(as.numeric(as.character(data$LightActiveDistance)))
-count_numeric <- sum(numeric_rows)
-print(count_numeric)
-
-numeric_rows <- !is.na(as.numeric(as.character(data$SedentaryActiveDistance)))
-count_numeric <- sum(numeric_rows)
-print(count_numeric)
-
-numeric_rows <- !is.na(as.numeric(as.character(data$VeryActiveMinutes)))
-count_numeric <- sum(numeric_rows)
-print(count_numeric)
-
-numeric_rows <- !is.na(as.numeric(as.character(data$FairlyActiveMinutes)))
-count_numeric <- sum(numeric_rows)
-print(count_numeric)
-
-numeric_rows <- !is.na(as.numeric(as.character(data$LightlyActiveMinutes)))
-count_numeric <- sum(numeric_rows)
-print(count_numeric)
-
-numeric_rows <- !is.na(as.numeric(as.character(data$SedentaryMinutes)))
-count_numeric <- sum(numeric_rows)
-print(count_numeric)
-
-numeric_rows <- !is.na(as.numeric(as.character(data$Calories)))
-count_numeric <- sum(numeric_rows)
-print(count_numeric)
-```
 
 
 Cleaning the data to confirm that all the columns contain numeric values this step proved to be unnessary, but it was a fun implementation of code.
@@ -237,23 +151,6 @@ This shows that all the data contains numeric values and not null values suggest
 checking if all the data contain all the same number of numeric values in each row.
 
 
-```{r}
-for (index in 1:1397){
-row <- data[index, ]
-
-is_numeric <- sapply(row,is.numeric)
-
-sum_numeric <- sum(is_numeric)
-
-if (sum_numeric != 14){
-print(sum(is_numeric))
-}
-if(index == 1397) {
-  print("That completes the loop to check for numerics different than normal")
-}
-}
-```
-That completes the cleaning process for checking data types, errors and missing or null values.
 
 Now lets inspect the data for outliers we need to use a box and wisker plot using the ggplot methodologies.
 
@@ -264,21 +161,19 @@ library(ggplot2)             # Load the ggplot2 package
 ```
 
 ```{r}
-data <- read.csv('dailyActivity_merged.csv')
 
-plot_boxplot <- function(data, TotalSteps) {
-  ggplot(data, aes(y = TotalSteps)) +
+plot_boxplot <- function(data, Sleep.Quality) {
+  ggplot(data, aes(y = Sleep.Quality)) +
     geom_boxplot() +
-    labs(title = paste("Box Plot of", TotalSteps),
-         y = TotalSteps) +
+    labs(title = paste("Box Plot of", Sleep.Quality),
+         y = Sleep.Quality) +
     theme_minimal()
 }
-plot_boxplot(data, "TotalSteps")
+plot_boxplot(data, "Sleep.Quality")
 
 ```
 
-As we observe 5 outlines off the data, but these numbers are high, but not unreasonable to a human, so we don't have to edit the data for these individuals. 
-
+We observe no outliers
 ```{r}
 col_names <- names(data)
 print(col_names)
@@ -324,265 +219,49 @@ Study Roadmap as a guide:
 
 
 Guiding questions
-● How should you organize your data to perform analysis on it? I should organize the information by looking at each individuals habits and finding out the trends of the person to see how the devices overtime alters their behavior?
+● How should you organize your data to perform analysis on it? 
+The data will be grouped into sleep quality ranges to be see how the new grouping determines the health statistics suggesting that poor quality sleep affects all areas of life.
 
 ● Has your data been properly formatted?
 
 The data is organized perfectly for this type of analysis filtering by person then glimpsing, then visualizing trends to spot the patterns is a valid approach for how the data is formatted. 
 
-Creating a group by each Id then looping together to create a picture of the average of the calories. 
-
-```{r}
-unique_ids <- unique(data$Id)
-
-for(ele in unique_ids){
-  Id<-data %>% 
-    filter(Id == ele) %>%
-    summarize(Average = mean(Calories))
-  print(Id)
-}
-```
-
-```{r}
-unique_ids <- unique(data$Id)
-
-count=0
-for(ele in unique_ids){
-  average<-data %>% 
-    filter(Id == ele) %>%
-    summarize(AverageValue = mean(LoggedActivitiesDistance, na.rm = TRUE))
-  if (average>0)
-  {count= count + 1}
-  print(paste("ID:", ele, str(average)))
-}
-print(count)
-```
-Only 7 out the 38 people use the tracker feature. How much does the logged activities vary from the average
-
-```{r}
-unique_ids <- unique(data$Id)
-
-for(ele in unique_ids){
-  average<-data %>% 
-    filter(Id == ele) %>%
-    filter(LoggedActivitiesDistance>0) %>%
-    summarize(AverageValue = mean(LoggedActivitiesDistance, na.rm = TRUE))
-
-print(paste("ID:", ele))
-print(average$AverageValue)
-}
-
-```
-This numbers compared to the groups average show that tracked activities tend lower than the average suggesting only a small portion do people commit the time to put in the activities. 
-
 
 ● What surprises did you discover in the data?
 
-The logged Activities are significantly underutilized features of the apps suggesting they are inconvenient to use improving these features efficiency might increase use, or avoiding increasing investment due to making an additional task to do in the struggle of life. 
-
-The second surprise found later in the book is the general trends the good columns like Total Steps, Distance, Very Active Minutes are all increasing in time, with decrease in sedentary minutes and calories decreasing
 
 ● What trends or relationships did you find in the data?
-
-Hypothesis: the purchase of the devices yields a increasing trend in increasing total activity. 
-To answer this first lets track sedentary time to see if its decreasing as the person uses the device suggesting the device encourages exercise. 
-
-Hypothesis: The devices show a decrease in the negative measurement like calories and secondary minutes 
-
-
-```{r}
-unique_ids <- unique(data$Id)
-
-for(ele in unique_ids){
-  average<-data %>% 
-    filter(Id == ele) %>%
-    summarize(AverageValue = mean(SedentaryMinutes, na.rm = TRUE))
-
-print(paste("ID:", ele))
-print(average$AverageValue)
-}
-```
-
-This is a graph to compare all the trend lines of each individual. 
-```{r}
-unique_ids <- unique(data$Id)
-
-data$ActivityDate <- as.Date(data$ActivityDate,format = "%m/%d/%Y")
-
-plot_smooth <- function(data, column_name) {
-  ggplot(data, aes_string(x = "ActivityDate", y = column_name)) +
-    geom_smooth() +
-    labs(title = paste("Line Plot of", column_name),
-         x = "ActivityDate",
-         y = column_name) +
-    theme_minimal()
-}
-
-for(ele in unique_ids){
-  group_by_Id<-data %>% 
-    filter(Id == ele)
-    
-print(plot_smooth(group_by_Id,"TotalSteps"))
-}
-```
-
-The inclusion of the device shows little to no relationship over time it appears to be up to individual preferences so the the hypothesis is null that device increases total steps. 
-
-What about reducing sendary time?
-
-```{r}
-unique_ids <- unique(data$Id)
-
-data$ActivityDate <- as.Date(data$ActivityDate,format = "%m/%d/%Y")
-
-plot_smooth <- function(data, column_name) {
-  ggplot(data, aes_string(x = "ActivityDate", y = column_name)) +
-    geom_smooth(method = "loess") +
-    labs(title = paste("Line Plot of", column_name),
-         x = "ActivityDate",
-         y = column_name) +
-    theme_minimal()
-}
-
-for(ele in unique_ids){
-  group_by_Id<-data %>% 
-    filter(Id == ele)
-    
-print(plot_smooth(group_by_Id,"SedentaryMinutes"))
-}
-```
-
-
-```{r}
-
-data <- read.csv('dailyActivity_merged.csv')
-
-
-data_second <- read.csv('dailyActivity_merged_second_month.csv')
-
-data_full <- rbind(data,data_second)
-
-view(data_full)
-
-data <- data_full
-
-data$ActivityDate <- as.Date(data$ActivityDate,format = "%m/%d/%Y")
-
-Id <- data %>%
-  filter(Id == 1503960366)
-
-ggplot(Id, aes(x = ActivityDate, y = TotalSteps)) +
-  geom_line() +
-  labs(title = "Smooth Plot of Total Steps",
-       x = "Activity Date",
-       y = "Total Steps") +
-  theme_minimal()
-
-```
-`
-```{r}
-ggplot(data, aes(x = ActivityDate, y = TotalSteps)) +
-  geom_smooth() +
-  labs(title = "Smooth Plot of Total Steps",
-       x = "Activity Date",
-       y = "Total Steps") +
-  theme_minimal()
-
-```
-```{r}
-ggplot(data, aes(x = ActivityDate, y = SedentaryMinutes)) +
-  geom_smooth() +
-  labs(title = "Smooth Plot of SedentaryMinutes",
-       x = "Activity Date",
-       y = "SedentaryMinutes") +
-  theme_minimal()
-
-```
-
-```{r}
-unique_ids <- unique(data$Id)
-
-data$ActivityDate <- as.Date(data$ActivityDate,format = "%m/%d/%Y")
-
-plot_smooth <- function(data, column_name) {
-  ggplot(data, aes_string(x = "ActivityDate", y = column_name)) +
-    geom_smooth() +
-    labs(title = paste("Line Plot of", column_name),
-         x = "ActivityDate",
-         y = column_name) +
-    theme_minimal()
-}
-
-for(ele in unique_ids){
-  group_by_Id<-data %>% 
-    filter(Id == ele)
-    
-print(plot_smooth(group_by_Id,"SedentaryMinutes"))
-}
-```
-
-```{r}
-ggplot(data, aes(x = ActivityDate, y = TotalDistance)) +
-  geom_smooth() +
-  labs(title = "Smooth Plot of TotalDistance",
-       x = "Activity Date",
-       y = "TotalDistance") +
-  theme_minimal()
-
-```
-
-```{r}
-ggplot(data, aes(x = ActivityDate, y = VeryActiveMinutes)) +
-  geom_smooth() +
-  labs(title = "Smooth Plot of VeryActiveMinutes",
-       x = "Activity Date",
-       y = "VeryActiveMinutes") +
-  theme_minimal()
-
-```
-
-```{r}
-ggplot(data, aes(x = ActivityDate, y = Calories)) +
-  geom_smooth() +
-  labs(title = "Smooth Plot of Calories",
-       x = "Activity Date",
-       y = "Calories") +
-  theme_minimal()
-
-```
-
-```{r}
-ggplot(data, aes(x = ActivityDate, y = ModeratelyActiveDistance)) +
-  geom_smooth() +
-  labs(title = "Smooth Plot of ModeratelyActiveDistance",
-       x = "Activity Date",
-       y = "ModeratelyActiveDistance") +
-  theme_minimal()
-
-```
-The trend shows that there is a general increase in the Total Steps, Very Active Minutes, Total Distance and decrease in sedentary minutes and calories by spiting into individuals and the groups we see similar trends for most individuals. 
 
 
 ● How will these insights help answer your business questions?
 
-Our goal is discover how our devices influence the behavior in our clients there is a general trend upward on many of the variables and a decrease of the negative variables like sedentary minutes and calories. Showing that having these devices helps you develop heather habits accoss the broad.
 
-1. Aggregate your data so it’s useful and accessible.combined the two data sets into one useing the "rbind" Done earlier in the document. 
+1. Aggregate your data so it’s useful and accessible.
 
 2. Organize and format your data. 
-organized the data by filtering by indiviudals to preform time series analysis on each indivudals habits.  
 
-3. Perform calculations. Done
+3. Perform calculations. 
 
-4. Identify trends and relationships. The relationship with time and the habits of the individuals show a strong relationship over time using the devices increase healthier habits and decrease negative habits. 
+```{r}
+
+df_filtered <- df %>%
+  dplyr::filter(Sleep.Quality <= quantile(Sleep.Quality, 0.25, na.rm = TRUE))
+
+# Create a bar plot of 'Physical.Activity.Level' for the filtered data
+ggplot(df_filtered, aes(x = Physical.Activity.Level)) +
+  geom_bar(fill = "skyblue", color = "black") +
+  labs(
+    title = "Physical Activity Levels in the Bottom 25% of Sleep Quality",
+    x = "Physical Activity Level",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+```
+
+4. Identify trends and relationships. 
 
 A summary of your analysis:
-
-At first I was very interested in the functionality of the column loggedActiviesDistance to determine how much logging the information the group preformed showing people are not interested in increasing the number of activities they had to do. 
-
-I wanted to isolate for individuals to determine the changes from the average, but ran into difficulties of the skim without chart function out outputting 38 averages. 
-
-Moving on I decided to look at the relationships of the individuals total steps and found a trend among the uses that match the groups trend to confirm that there is a increase in total steps, total distance, very active minutes, and matching decreases in calories and sedentary minutes. This is our advertising goal to show that our users life's are improving overtime with the uses of the devices.  
 
 
 Share
